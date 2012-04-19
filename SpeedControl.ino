@@ -1,4 +1,4 @@
-//FARTFARTFARTFARTPOOT
+
 //digital pin 2 is the feedback from the left motor
 //digital pin 3 is the feedback from the right motors
 
@@ -42,7 +42,6 @@ int getAngularDisplacement()
 {
   return leftSteps - rightSteps;
 }
-
 
 
 
