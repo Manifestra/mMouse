@@ -11,12 +11,12 @@
 //unsigned long newTime = 0;                   //the latest recorded time reading
 //unsigned long oldTime = 0;                   //the previously recorded time
 //unsigned long timeDiff = 0;                  //the difference between the new time and the old time
-//uchar iterationCounter = 0;          //determines how many iterations of loop() have occurred since the counter was last reset
-//uchar iterationMax = 4;              //determines how many iterations of loop() are completed before the timer is updated
-uchar stepProgress = 0;              //the linear displacement since last stopped
-uchar leftSensor = 0;
-uchar rightSensor = 0;
-uchar frontSensor = 0;
+//unsigned char iterationCounter = 0;          //determines how many iterations of loop() have occurred since the counter was last reset
+//unsigned char iterationMax = 4;              //determines how many iterations of loop() are completed before the timer is updated
+unsigned long stepProgress = 0;              //the linear displacement since last stopped
+unsigned char leftSensor = 0;
+unsigned char rightSensor = 0;
+unsigned char frontSensor = 0;
 
 const unsigned long STEP_LENGTH = 16;        //the distance between two squares
 const double L_CORRECTION = 0;          //the left wheel's constant for steering control
@@ -25,9 +25,10 @@ const double R_CORRECTION = 0;          //the right wheel's constant for steerin
 const double idealLeftSensor = 46;  //calibrated value for Left sensor (MUST BE CALIBRATED)
 const double idealRightSensor = 60;
 
-const uchar NO_FRONT_WALL = 770;            //the threshold values determining whether or not a wall is considered present
-const uchar NO_LEFT_WALL = 550;
-const uchar NO_RIGHT_WALL = 600;
+const double NO_FRONT_WALL = 770;
+const double NO_LEFT_WALL = 550;
+
+
 
 void setup()
 { 
