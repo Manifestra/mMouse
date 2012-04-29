@@ -10,7 +10,7 @@ static uchar sides[SIDES_CAP] = {255, 255, 255, 255};    //the number of the ope
                                                          //holds the value of the cell to the north, or 255 if it is a wall.
 const uchar SIDES_CAP = 4;                               //the capacity of the sides array
 
-const uchar NORTH = 0;                                  //numbers to represent direction
+const uchar NORTH = 0;                                   //numbers to represent direction
 const uchar EAST = 1;
 const uchar SOUTH = 2;
 const uchar WEST = 3;
@@ -50,6 +50,51 @@ uchar getMinPosition(uchar[] ar, uchar cap)
   return minIndex;
 }
     
+//shiftClockwise - returns the direction (numOfTimes * 90degrees) clockwise of the init position
+//@param numOfTimes - the amount of times you wish to look in terms of 90 degree clockwise increments on the compass
+//      example
+//           shiftClockwise(1, NORTH) == EAST, shiftClockwise(2, SOUTH) == NORTH
+//@param initPosition - the position you are looking from. usually currentFacing
+//@return - the direction numOfTimes * 90degrees clockwise of the init position
+uchar shiftClockwise(uchar initPosition, uchar numOfTimes)
+{
+  uchar tmp = initPosition;
+  for (uchar i = 0; i < numOfTimes){
+    if (tmp + 0x01 == 0x05){
+      tmp = 0x00;
+    }
+    else{
+      ++tmp;
+    }
+  }
+  return tmp;
+}
+
+//getValueFrom - gets the value of the cell to the north, east, south, or west of the robot
+//@param facing - the direction to look for the value, north, east, south, or west
+//@return - the floodfill value of the referenced cell
+uchar getValueFrom(uchar facing)
+{
+  switch (facing)
+  {
+    case NORTH:
+      if(yPosition > 0) return mazeMap[yPosition - 1][xPosition];
+      else return 255;
+      break;
+    case EAST:
+      if(xPosition < 15) return mazeMap[yPosition][xPosition + 1];
+      else return 255;
+      break;
+    case SOUTH:
+      if(yPosition < 15) return mazeMap[yPosition + 1][xPosition];
+      else return 255;
+      break;
+    case WEST:
+      if(xPosition > 0) return mazeMap[yPosition][xPosition - 1];
+      else return 255;
+      break;
+  }
+}
   
 //getSidesMin - searches an array and returns the miminum value.
 //@param uchar[] - the array to scan
@@ -73,6 +118,28 @@ uchar getSidesMin()
 //             in a tie. If three cells all have the same number, give the leftmost cell that is not the one the robot came
 //             from has priorty
 void faceLowest(){
+  uchar minAdj = getSidesMin();                 //sets minAdj (minimum adjacent) equal to the lowest value of the adjacent sides[] array
+  /*
+  if (frontWall && leftWall && rightWall){      //if the mouse is at a dead end, u-turn
+    turLeft();
+    turnLeft();
+  }
+  */
+  if (getValueFrom(currentFacing) == minAdj)                            //if the square in front of the robot is lower than its current square, maintain heading
+  {}   
+  else if (getValueFrom(shiftClockwise(currentFacing, 3)) == minAdj)    //if the square to the left is a minimum, turn left
+  {
+    turnLeft();
+  }
+  else if (getValueFrom(shiftClockwise(currentFacing, 1)) == minAdj)    //if the square to the right is a minimum, turn right
+  {
+    turnRight();
+  }
+  else                                                                  //else make a u-turn
+  {
+    turnLeft();
+    turnLeft(); 
+  }
   
 }
 

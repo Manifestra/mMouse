@@ -6,7 +6,7 @@
 //pin A4 for left sensor
 //A5 is front sensor
 //A6 is right sensor
-
+typedef unsigned char uchar;
 
 //unsigned long newTime = 0;                   //the latest recorded time reading
 //unsigned long oldTime = 0;                   //the previously recorded time
@@ -29,6 +29,19 @@ const uchar NO_FRONT_WALL = 770;            //the threshold values determining w
 const uchar NO_LEFT_WALL = 550;
 const uchar NO_RIGHT_WALL = 600;
 
+/* Pins */
+const uchar L_FEEDBACK = ?;
+const uchar R_FEEDBACK = ?;
+
+const uchar L_SENS_PIN = ?;
+const uchar R_SENS_PIN = ?;
+const uchar F_SENS_PIN = ?;
+
+const uchar L_FORWARD = ?;
+const uchar R_FORWARD = ?;
+const uchar L_REVERSE = ?;
+const uchar R_REVERSE = ?;
+
 void setup()
 { 
   attachInterrupt(0, incrLeftSteps, RISING);  //increments leftSteps whenever a rising edge is detected from the left motor
@@ -37,25 +50,16 @@ void setup()
 
 void loop()
 {
-  //every iteration of loop() (or nth iteration of the loop if too fast) the robot takes a time reading to be compared to the amount of steps taken since the last reading
+//every iteration of loop() (or nth iteration of the loop if too fast) the robot takes a time reading to be compared to the amount of steps taken since the last reading
 //  if (iterationCounter == 4)                    //if n loops have occurred, update the times. 
 //  {
 //    oldTime = newTime;
 //    newTime = micros();   
 //    timeDiff = newTime - oldTime;
 //  }
-  frontSensor = analogRead(5);
-  //The below code is based on the state machine derived at Josh's
-  if ((frontSensor > NO_FRONT_WALL) && (leftSensor < NO_LEFT_WALL))            //if there is a wall to the left and no wall in front, step forward
-    stepForward();
-  if (leftSensor > NO_LEFT_WALL)                                               //if there is no left wall, turn left
-    turnLeft();
-  if ((frontSensor < NO_FRONT_WALL) && (leftSensor < NO_LEFT_WALL))            //if there is a front wall and a left wall, turn right
-  {
-    turnRight();
-    if (frontSensor < NO_FRONT_WALL)                                           //if there is a front wall after turning right, then it is a dead end, turn right again
-      turnRight();
-  }
+  frontSensor = analogRead(FRONT_SENSOR);
+  leftSensor = analogRead(LEFT_SENSOR);
+  rightSensor = analogRead(RIGHT_SENSOR);
   
 //  iterationcounter++;                           //updates the iteration counter
 }
