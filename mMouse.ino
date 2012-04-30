@@ -1,67 +1,60 @@
-//Recient from Andrew
+#include <PID_v1.h>                            //includes the PID library
 
 //digital pins 0, 1 reserved
-//always use unsigned long for timers
-//analog pin 2 for left wheel, analog pin 3 for right wheel
-//pin A4 for left sensor
-//A5 is front sensor
-//A6 is right sensor
 typedef unsigned char uchar;
 
-//unsigned long newTime = 0;                   //the latest recorded time reading
-//unsigned long oldTime = 0;                   //the previously recorded time
-//unsigned long timeDiff = 0;                  //the difference between the new time and the old time
-//uchar iterationCounter = 0;          //determines how many iterations of loop() have occurred since the counter was last reset
-//uchar iterationMax = 4;              //determines how many iterations of loop() are completed before the timer is updated
-uchar stepProgress = 0;              //the linear displacement since last stopped
+uchar stepProgress = 0;                        //the linear displacement since last stopped
 uchar leftSensor = 0;
 uchar rightSensor = 0;
 uchar frontSensor = 0;
 
-const unsigned long STEP_LENGTH = 16;        //the distance between two squares
-const double L_CORRECTION = 0;          //the left wheel's constant for steering control
-const double R_CORRECTION = 0;          //the right wheel's constant for steering control
+#define STEP_LENGTH 16;                        //the distance between two squares
+const double L_CORRECTION = 0;                 //the left wheel's constant for steering control (for debugging only)
+const double R_CORRECTION = 0;                 //the right wheel's constant for steering control (for debugging only)
 
-const double idealLeftSensor = 46;  //calibrated value for Left sensor (MUST BE CALIBRATED)
+const double idealLeftSensor = 46;             //calibrated value for Left sensor. for debugging, not used in final mouse
 const double idealRightSensor = 60;
 
-const uchar NO_FRONT_WALL = 770;            //the threshold values determining whether or not a wall is considered present
-const uchar NO_LEFT_WALL = 550;
-const uchar NO_RIGHT_WALL = 600;
+#define L_SENSOR_SETPOINT 46                   //setpoints for error comparison for the robot's sensors 
+#define R_SENSOR_SETPOINT 60
+#define F_SENSOR_SETPOINT 88
 
-/* Pins */
-const uchar L_FEEDBACK = ?;
-const uchar R_FEEDBACK = ?;
+#define NO_FRONT_WALL 770                      //the threshold values determining whether or not a wall is considered present
+#define NO_LEFT_WALL 550
+#define NO_RIGHT_WALL 600
 
-const uchar L_SENS_PIN = ?;
-const uchar R_SENS_PIN = ?;
-const uchar F_SENS_PIN = ?;
+/* PINS */
+#define L_FEEDBACK ?
+#define R_FEEDBACK ?
+#define L_SENS_PIN ?
+#define R_SENS_PIN ?
+#define F_SENS_PIN ?
+#define L_FORWARD ?
+#define R_FORWARD ?
+#define L_REVERSE ?
+#define R_REVERSE ?
 
-const uchar L_FORWARD = ?;
-const uchar R_FORWARD = ?;
-const uchar L_REVERSE = ?;
-const uchar R_REVERSE = ?;
+
+
 
 void setup()
 { 
   attachInterrupt(0, incrLeftSteps, RISING);  //increments leftSteps whenever a rising edge is detected from the left motor
   attachInterrupt(1, incrRightSteps, RISING); //increments rightSteps whenever a rising edge is detected from the right motor
+  
+  
 }
 
 void loop()
 {
-//every iteration of loop() (or nth iteration of the loop if too fast) the robot takes a time reading to be compared to the amount of steps taken since the last reading
-//  if (iterationCounter == 4)                    //if n loops have occurred, update the times. 
-//  {
-//    oldTime = newTime;
-//    newTime = micros();   
-//    timeDiff = newTime - oldTime;
-//  }
-  frontSensor = analogRead(FRONT_SENSOR);
+  frontSensor = analogRead(FRONT_SENSOR);         //updates sensor readings
   leftSensor = analogRead(LEFT_SENSOR);
   rightSensor = analogRead(RIGHT_SENSOR);
   
-//  iterationcounter++;                           //updates the iteration counter
+  stepForward();     //move the mouse forward one cell
+  update();          //redraws the map according to its surroundings
+  faceLowest();      //faces the cell most likely to lead to the center
+
 }
 
 //stepForward - runs both motors to move straight while correcting its path

@@ -1,21 +1,20 @@
+#define NORTH 0                                          //numbers representing direction
+#define EAST 1
+#define SOUTH 2
+#define WEST 3
+
 typedef unsigned char uchar;
 
-static uchar xPosition = 0;                    //a value between 0 and 15 representing the robot's current x position
-static uchar yPosition = 0;                    //a value between 0 and 15 representing the robot's current y position
+static uchar xPosition = 0;                              //a value between 0 and 15 representing the robot's current x position
+static uchar yPosition = 0;                              //a value between 0 and 15 representing the robot's current y position
 
 static uchar currentFacing = 1;                          //the direction, N,S,E,W which the robot is facing.
                                                          // 0 for North, 1 for East, 2 for South, 3 for West.
 static uchar sides[SIDES_CAP] = {255, 255, 255, 255};    //the number of the open sides i.e. adjacent cells with no walls
                                                          //in the way. The array is indexed based on direction. i.e. sides[0]
                                                          //holds the value of the cell to the north, or 255 if it is a wall.
-const uchar SIDES_CAP = 4;                               //the capacity of the sides array
-
-const uchar NORTH = 0;                                   //numbers to represent direction
-const uchar EAST = 1;
-const uchar SOUTH = 2;
-const uchar WEST = 3;
                    
-static uchar[][] mazeMap =                              //the map of the maze
+static uchar[][] mazeMap =                               //the map of the maze, can keep static if merge movement with mapping
 {
 {14,13,12,11,10,9,8,7,7,8,9,10,11,12,13,14},  
 {13,12,11,10,9,8,7,6,6,7,8,9,10,11,12,13},
@@ -59,6 +58,7 @@ uchar getMinPosition(uchar[] ar, uchar cap)
 uchar shiftClockwise(uchar initPosition, uchar numOfTimes)
 {
   uchar tmp = initPosition;
+  /* unroll this loop */
   for (uchar i = 0; i < numOfTimes){
     if (tmp + 0x01 == 0x05){
       tmp = 0x00;
@@ -67,6 +67,7 @@ uchar shiftClockwise(uchar initPosition, uchar numOfTimes)
       ++tmp;
     }
   }
+  if 
   return tmp;
 }
 
@@ -103,7 +104,7 @@ uchar getSidesMin()
 {
   uchar minimum = sides[0];                         //keeps track of the minimum value, set to the first element as default
   uchar index;                                 
-  for (index = 1; index < SIDES_CAP; index++)      //traverse the array 4 times
+  for (index = 0; index < 4; index++)      //traverse the array 4 times
   {
     if (sides[index] < minimum)                     //if an element is less than the current smallest element
     {                                               //update minimum to the value of that element, otherwise do nothing
@@ -115,16 +116,10 @@ uchar getSidesMin()
 
 
 //faceLowest - turns towards the lowest number square. The square which the robot currently came from has lower priority
-//             in a tie. If three cells all have the same number, give the leftmost cell that is not the one the robot came
+//             in a tie. If three cells all have the same number, the leftmost cell that is not the one the robot came
 //             from has priorty
 void faceLowest(){
   uchar minAdj = getSidesMin();                 //sets minAdj (minimum adjacent) equal to the lowest value of the adjacent sides[] array
-  /*
-  if (frontWall && leftWall && rightWall){      //if the mouse is at a dead end, u-turn
-    turLeft();
-    turnLeft();
-  }
-  */
   if (getValueFrom(currentFacing) == minAdj)                            //if the square in front of the robot is lower than its current square, maintain heading
   {}   
   else if (getValueFrom(shiftClockwise(currentFacing, 3)) == minAdj)    //if the square to the left is a minimum, turn left
@@ -148,9 +143,9 @@ void faceLowest(){
 //precondition - used immediately after stepping, before turning.
 void update()
 {
-  bool frontWall = (frontSensor < NO_FRONT_WALL);                                          //sets boolean values indicating the presence of walls
-  bool leftWall = (leftSensor < NO_LEFT_WALL);
-  bool rightWall = (rightSensor < NO_RIGHT_WALL);
+  boolean frontWall = (frontSensor < NO_FRONT_WALL);                                                        //sets boolean values indicating the presence of walls
+  boolean leftWall = (leftSensor < NO_LEFT_WALL);
+  boolean rightWall = (rightSensor < NO_RIGHT_WALL);
     
   switch (currentFacing)                                                                                 //updates the sides[] array
   {
