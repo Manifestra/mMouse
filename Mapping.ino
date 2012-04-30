@@ -36,17 +36,14 @@ static uchar[][] mazeMap =                               //the map of the maze, 
 
 //getMinPosition - searches an array and returns the index of the miminum value. This position will equal the direction
 //                 of the lowest numbered open adjacent cell
-//@param uchar[] - the array to scan
-//@param uchar - the capacity of the array
-uchar getMinPosition(uchar[] ar, uchar cap)
+//@return - the position of the smallest value
+uchar getMinPosition()
 {
-  uchar minIndex;
-  uchar index;
-  for (index = 0; index < SIDES_SIZE && sides[index] != getSidesMin(); index++)
-  {
-    minIndex = index;
-  }
-  return minIndex;
+  uchar minValue = getSidesMin();
+  if (sides[0] == minValue) return 0;
+  if (sides[1] == minValue) return 1;
+  if (sides[2] == minValue) return 2;
+  if (sides[3] == minValue) return 3;
 }
     
 //shiftClockwise - returns the direction (numOfTimes * 90degrees) clockwise of the init position
@@ -97,20 +94,14 @@ uchar getValueFrom(uchar facing)
   }
 }
   
-//getSidesMin - searches an array and returns the miminum value.
-//@param uchar[] - the array to scan
-//@param uchar - the capacity of the array
+//getSidesMin - searches the sides array and returns the miminum value.
+//@return - the minimum value
 uchar getSidesMin()
 {
-  uchar minimum = sides[0];                         //keeps track of the minimum value, set to the first element as default
-  uchar index;                                 
-  for (index = 0; index < 4; index++)      //traverse the array 4 times
-  {
-    if (sides[index] < minimum)                     //if an element is less than the current smallest element
-    {                                               //update minimum to the value of that element, otherwise do nothing
-       minimum = sides[index];                
-    }
-  }
+  uchar minimum = sides[0];                       // keeps track of the minimum value, set to the first element by default
+  if (sides[1] < minimum) minimum = sides[1];     // Checks if values at the remaining positions in the array 
+  if (sides[2] < minimum) minimum = sides[2];     // are less than the default minimum, updating the minimum accordingly
+  if (sides[3] < minimum) minimum = sides[3];     
   return minimum;              
 }
 
