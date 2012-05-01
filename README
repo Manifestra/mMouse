@@ -1,62 +1,79 @@
 Status:
-	Code is being optimized. needs work reducing the number of global variables and unrolling short loops. help
-    	is needed on PID, please familiarize yourselves with the library. A list of PID fuctions is in the notes file.
-	Movement is a new file that will govern all movement functions. A lot of tweaking has to be done to the
-	variables, making sure static variables are only declared if they are not needed in another file and making
-	sure all global variables that can be made not-global are made not-global. thanks all! - Andrew
+	Code is being optimized. needs work reducing the number of global 	variables and unrolling short loops. help is needed on PID, please 	familiarize yourselves with the library. A list of PID fuctions is 	in the notes file. Movement is a new file that will govern all
+	movement functions. A lot of tweaking has to be done to the
+	variables, making sure static variables are only declared if they 	are not needed in another file and making sure all global variables 	that can be made not-global are made not-global. thanks all! 
+	- Andrew
 
 Other Notes:
-	- Remember to keep the code in a folder titled "mMouse", else Arduino will be all like "hay i needz a 
-	  folder i dunno which of teh filez is teh main one, i make new folder, k? k."... 
-	- If something you change makes a liar out of any of the following descriptions, please make an effort to update
-	  this README.
+	- Remember to keep the code in a folder titled "mMouse", else
+	Arduino will be all like "hay i needz a folder i dunno which of teh
+	filez is teh main one, i make new folder, k? k."... 
+	- If something you change makes a liar out of any of the following
+	descriptions, please make an effort to update this README.
 
-gitignore - Allows git to ignore the pde files necessary for functionality on primitve Mac OSX versions for certain
-	    people using certain primitve Mac OSX versions.
+gitignore - Allows git to ignore the pde files necessary for functionality
+	    on primitve Mac OSX versions for certain people using certain
+	    primitve Mac OSX versions.
 
 mMouse.ino - What am I? Where do I start?
-	Calibrates the mouse, takes and updates sensor readings, and executes basic movement.  
-	(someone please  fill in what this actually does)
+	Calibrates the mouse, takes and updates sensor readings, and
+	executes basic movement. (someone please  fill in what this
+	actually does)
 		Functions:
 			setup()
 			loop()
-			stepForward() - runs both motors to move straight while correcting its path
-			turnLeft() - turns the robot counterclockwise 90 degrees
+			stepForward() - runs both motors to move straight
+			while correcting its path
+			turnLeft() - turns the robot counterclockwise 90
+			degrees
 			turnRight() - turns the robot clockwise 90 degrees
 
 Mapping.ino - Where am I? Where should I go next?
-	Determines the current position and status of adjacent cells, then determines where to go next using a flood fill
-	algorithm.
+	Determines the current position and status of adjacent cells, then 	determines where to go next using a flood fill algorithm.
 		Functions:
-			getMinPosition() - searches the sides array and returns the index of the miminum value. This position 
-							   will equal the direction of the lowest numbered open adjacent cell
-			getSidesMin() - searches the sides array and returns the minimum value.
-			shiftClockwise(initPosition, numOfTimes) - returns the direction (numOfTimes * 90degrees) clockwise of
-													   the init position
-			getValueFrom(facing) - gets the value of the cell to the north, east, south, or west of the robot
-			faceLowest() - turns towards the lowest number square.The square which the robot currently came from
-						   has lower priority in a tie. If three cells all have the same number, the leftmost
-						   cell that is not the one the robot came from has priorty.
-			update() - rewrites the map if necessary. If the number of the current square is rewritten to be 1 + 
-					   the minimum number of the available adjacent squares. A square is available if there is no
-					   wall between the robot and it. precondition - used immediately after stepping, before turning.
+			getMinPosition() - searches the sides array and
+				returns the index of the miminum value. 				This position will equal the direction of 				the lowest numbered open adjacent cell
+			getSidesMin() - searches the sides array and
+				returns the minimum value.
+			shiftClockwise(initPosition, numOfTimes) - returns
+				the direction (numOfTimes * 90degrees) 					clockwise of the init position
+			getValueFrom(facing) - gets the value of the cell
+				to the north, east, south, or west of the 				robot
+			faceLowest() - turns towards the lowest number
+				square. The square which the robot 
+				currently came from has lower priority in a 				tie. If three cells all have the same
+				number, the leftmost cell that is
+				not the one the robot came from has 					priorty.
+			update() - rewrites the map if necessary. If the 				number of the current square is rewritten 				to be 1 + the minimum number of the
+				available adjacent squares. A square is
+				available if there is no wall between the
+				robot and it. precondition - used
+				immediately after stepping, before turning.
 
 Movement.ino - How fast am I going? How fast should I go? 
-	The beginning of the implementation of the PID library. Will govern all movement, thus rendering 
-	SpeedControl.ino obsolete. 
+	The beginning of the implementation of the PID library. Will govern
+	all movement, thus rendering SpeedControl.ino obsolete. 
 		Functions:
-			turnLeft() - turns the robot counterclockwise clockwise 90 degrees
+			turnLeft() - turns the robot counterclockwise
+				clockwise 90 degrees
 			turnRight() - turns the robot clockwise 90 degrees
-			stepForward() - runs both motors to move straight while correcting its path
+			stepForward() - runs both motors to move straight
+				while correcting its path
 
 SpeedControl.ino - How fast am I going? How fast should I go? 
-	Finds and updates the speed of each motor, determines how fast each motor should move to maintain heading.
-	(and to keep from wiggling around?)
+	Finds and updates the speed of each motor, determines how fast each
+	motor should move to maintain heading.(and to keep from wiggling
+	around?)
 		Functions:
-			incrLeftSteps() - increments leftWheelSteps. To be used with interrupt
-			incrRightSteps() - increments rightWheelSteps. To be used with interrupt
-			getLeftVelocity() - returns the left wheel's velocity
-			getRightVelocity() - returns the right wheel's velocity
-			getAngularDisplacement() - returns the angular displacement
+			incrLeftSteps() - increments leftWheelSteps. To be
+				used with interrupt
+			incrRightSteps() - increments rightWheelSteps. To
+				be used with interrupt
+			getLeftVelocity() - returns the left wheel's
+				velocity
+			getRightVelocity() - returns the right wheel's
+				velocity
+			getAngularDisplacement() - returns the angular
+				displacement
 
 Notes.ino - Commented PID library 
