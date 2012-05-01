@@ -34,7 +34,8 @@ mMouse.ino - What am I? Where do I start?
 			turnRight() - turns the robot clockwise 90 degrees
 
 Mapping.ino - Where am I? Where should I go next?
-	Determines the current position and status of adjacent cells, then 	determines where to go next using a flood fill algorithm.
+	Determines the current position and status of adjacent cells, then
+	determines where to go next using a flood fill algorithm.
 		Functions:
 			getMinPosition() - searches the sides array and returns
 				the index of the miminum value. This position
