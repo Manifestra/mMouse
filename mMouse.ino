@@ -1,12 +1,11 @@
 #include <PID_v1.h>                            //includes the PID library
+#include <avr/pgmspace.h>                      //Allows for the direct usage of flash memory
 
-//digital pins 0, 1 reserved
-typedef unsigned char uchar;
 
-uchar stepProgress = 0;                        //the linear displacement since last stopped
-uchar leftSensor = 0;
-uchar rightSensor = 0;
-uchar frontSensor = 0;
+unsigned char stepProgress = 0;               //the linear displacement since last stopped
+unsigned char leftSensor = 0;
+unsigned char rightSensor = 0;
+unsigned char frontSensor = 0;
 
 #define STEP_LENGTH 16;                        //the distance between two squares
 const double L_CORRECTION = 0;                 //the left wheel's constant for steering control (for debugging only)
@@ -57,57 +56,4 @@ void loop()
 
 }
 
-//stepForward - runs both motors to move straight while correcting its path
-void stepForward()
-{
-  /* Movement */
-  while (stepProgress < STEP_LENGTH)
-  {
-    leftSensor = analogRead(4);
-    if (leftSensor < idealLeftSensor)
-    {
-      analogWrite(2, 255);
-      analogWrite(3, 255 - (R_CORRECTION * leftSensor));
-    }
-    else
-    {
-      analogWrite(2, 255);
-      analogWrite(3, 255 - (L_CORRECTION * leftSensor));
-    }
-    
-    /* Mapping */
-    switch(currentFacing)                //updates the current position on the map based on the direction it just stepped.
-    {
-      case 0:        //steppng north
-        --yPosition;
-        break;
-      case 1:        //stepping east
-        ++xPosition;
-        break;
-      case 2:        //stepping south
-        ++yPosition;
-        break;
-      case 3:        //stepping west
-        --xPosition;
-        break;
-  }
-  
-}
 
-//turnLeft() - turns the robot counterclockwise clockwise 90 degrees
-void turnLeft()
-{
-  /* Movement */
-  
-  /* Mapping */
-  currentFacing = currentFacing > 0 ? --currentFacing : 3;      //updates the current facing.
-}
-
-//turnRight() - turns the robot clockwise 90 degrees
-void turnRight()
-{
-  /* Movement */
-  
-  /* Mapping */
-  currentFacing = currentFacing < 3 ? ++currentFacing : 0;      //updates the current facing.
-} 
