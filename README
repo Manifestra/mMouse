@@ -1,6 +1,6 @@
 Status:
 	Code is being optimized. needs work reducing the number of global variables and unrolling short loops. help
-    is needed on PID, please familiarize yourselves with the library. A list of PID fuctions is in the notes file.
+    	is needed on PID, please familiarize yourselves with the library. A list of PID fuctions is in the notes file.
 	Movement is a new file that will govern all movement functions. A lot of tweaking has to be done to the
 	variables, making sure static variables are only declared if they are not needed in another file and making
 	sure all global variables that can be made not-global are made not-global. thanks all! - Andrew
@@ -12,7 +12,7 @@ Other Notes:
 	  this README.
 
 gitignore - Allows git to ignore the pde files necessary for functionality on primitve Mac OSX versions for certain
-			people using certain primitve Mac OSX versions.
+	    people using certain primitve Mac OSX versions.
 
 mMouse.ino - What am I? Where do I start?
 	Calibrates the mouse, takes and updates sensor readings, and executes basic movement.  
