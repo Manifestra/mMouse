@@ -1,5 +1,16 @@
+<<<<<<< HEAD
 
 
+=======
+#include <PID_v1.h>                            //includes the PID library
+#include <avr/pgmspace.h>                      //Allows for the direct usage of flash memory
+
+
+unsigned char stepProgress = 0;               //the linear displacement since last stopped
+unsigned char leftSensor = 0;
+unsigned char rightSensor = 0;
+unsigned char frontSensor = 0;
+>>>>>>> 212c54425eb51ed529fd72c18ec593088f808aa3
 
 
 
@@ -58,5 +69,11 @@ void loop()
   stepForward();     //move the mouse forward one cell
   update();          //redraws the map according to its surroundings
   faceLowest();      //faces the cell most likely to lead to the center
+<<<<<<< HEAD
 }
+=======
+
+}
+
+>>>>>>> 212c54425eb51ed529fd72c18ec593088f808aa3
 

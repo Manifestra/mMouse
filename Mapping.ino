@@ -1,8 +1,11 @@
+
 #define NORTH 0                                          //numbers representing direction
 #define EAST 1
 #define SOUTH 2
 #define WEST 3
+#define SIDES_CAP = 0x04
 
+<<<<<<< HEAD
 
 
 static unsigned char xPosition = 0;                              //a value between 0 and 15 representing the robot's current x position
@@ -15,6 +18,18 @@ static unsigned char sides[4] = {255, 255, 255, 255};    //the number of the ope
                                                          //holds the value of the cell to the north, or 255 if it is a wall.
                    
 static unsigned char mazeMap[][16] =                               //the map of the maze, can keep static if merge movement with mapping
+=======
+unsigned char xPosition = 0;                              //a value between 0 and 15 representing the robot's current x position
+unsigned char yPosition = 0;                              //a value between 0 and 15 representing the robot's current y position
+
+unsigned char currentFacing = 1;                          //the direction, N,S,E,W which the robot is facing.
+                                                          // 0 for North, 1 for East, 2 for South, 3 for West.
+unsigned char sides[SIDES_CAP] = {255, 255, 255, 255};    //the number of the open sides i.e. adjacent cells with no walls
+                                                          //in the way. The array is indexed based on direction. i.e. sides[0]
+                                                          //holds the value of the cell to the north, or 255 if it is a wall.
+                   
+unsigned char mazeMap[][] =                               //the map of the maze, can keep static if merge movement with mapping
+>>>>>>> 212c54425eb51ed529fd72c18ec593088f808aa3
 {
 {14,13,12,11,10,9,8,7,7,8,9,10,11,12,13,14},  
 {13,12,11,10,9,8,7,6,6,7,8,9,10,11,12,13},
@@ -35,15 +50,30 @@ static unsigned char mazeMap[][16] =                               //the map of 
 };
 
 //getMinPosition - searches an array and returns the index of the miminum value. This position will equal the direction
-//                 of the lowest numbered open adjacent cell
+//of the lowest numbered open adjacent cell
 //@return - the position of the smallest value
 unsigned char getMinPosition()
 {
+<<<<<<< HEAD
   unsigned char minValue = getSidesMin();
+=======
+  unsigned char minValue = getMinAdj();
+>>>>>>> 212c54425eb51ed529fd72c18ec593088f808aa3
   if (sides[0] == minValue) return 0;
   if (sides[1] == minValue) return 1;
   if (sides[2] == minValue) return 2;
   if (sides[3] == minValue) return 3;
+}
+
+//getMinAdj - searches the sides array and returns the adjacent cell with the lowest value.
+//@return - the minimum value
+unsigned char getMinAdj()
+{
+  unsigned char minimum = sides[0];                       // keeps track of the minimum value, set to the first element by default
+  if (sides[1] < minimum) minimum = sides[1];     // Checks if values at the remaining positions in the array 
+  if (sides[2] < minimum) minimum = sides[2];     // are less than the default minimum, updating the minimum accordingly
+  if (sides[3] < minimum) minimum = sides[3];     
+  return minimum;              
 }
     
 //shiftClockwise - returns the direction (numOfTimes * 90degrees) clockwise of the init position
@@ -93,6 +123,7 @@ unsigned char getValueFrom(unsigned char facing)
       break;
   }
 }
+<<<<<<< HEAD
   
 //getSidesMin - searches the sides array and returns the miminum value.
 //@return - the minimum value
@@ -104,13 +135,19 @@ unsigned char getSidesMin()
   if (sides[3] < minimum) minimum = sides[3];     
   return minimum;              
 }
+=======
+>>>>>>> 212c54425eb51ed529fd72c18ec593088f808aa3
 
 
 //faceLowest - turns towards the lowest number square. The square which the robot currently came from has lower priority
 //             in a tie. If three cells all have the same number, the leftmost cell that is not the one the robot came
 //             from has priorty
 void faceLowest(){
+<<<<<<< HEAD
   unsigned char minAdj = getSidesMin();                 //sets minAdj (minimum adjacent) equal to the lowest value of the adjacent sides[] array
+=======
+  unsigned char minAdj = getMinAdj();                 //sets minAdj (minimum adjacent) equal to the lowest value of the adjacent sides[] array
+>>>>>>> 212c54425eb51ed529fd72c18ec593088f808aa3
   if (getValueFrom(currentFacing) == minAdj)                            //if the square in front of the robot is lower than its current square, maintain heading
   {}   
   else if (getValueFrom(shiftClockwise(currentFacing, 3)) == minAdj)    //if the square to the left is a minimum, turn left
@@ -165,11 +202,12 @@ void update()
           sides[WEST] = (!frontWall && xPosition > 0) ? mazeMap[yPosition][xPosition - 1] : 255;         //updates sides[] with the west value
           break;
   }
-  
-  if (getSidesMin() > mazeMap[yPosition][xPosition]){                 //if the current cell is the lowest valued cell, update its value to
-    mazeMap[yPosition][xPosition] = getSidesMin() + 1;                //1 + the value of the nearest open cell
+  unsigned char minSide = getMinAdj();
+  if (minSide > mazeMap[yPosition][xPosition]){                 //if the current cell is the lowest valued cell, update its value to
+    mazeMap[yPosition][xPosition] = minSide + 1;                //1 + the value of the nearest open cell
   }
 }
+<<<<<<< HEAD
 
 //wallInFront - returns true if there is a wall in front of the mouse
 boolean wallInFront(){
@@ -188,3 +226,5 @@ boolean wallToRight(){
   if(frontSensor < NO_RIGHT_WALL) return true;
   else return false;
 }
+=======
+>>>>>>> 212c54425eb51ed529fd72c18ec593088f808aa3
