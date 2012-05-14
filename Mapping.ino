@@ -1,4 +1,4 @@
-#define NORTH 0                                          //numbers representing direction
+ #define NORTH 0                                          //numbers representing direction
 #define EAST 1
 #define SOUTH 2
 #define WEST 3
@@ -14,7 +14,7 @@ static unsigned char sides[4] = {255, 255, 255, 255};    //the number of the ope
                                                          //in the way. The array is indexed based on direction. i.e. sides[0]
                                                          //holds the value of the cell to the north, or 255 if it is a wall.
                    
-static unsigned char mazeMap[][16] =                               //the map of the maze, can keep static if merge movement with mapping
+static unsigned char mazeMap[16][16] =                               //the map of the maze, can keep static if merge movement with mapping
 {
 {14,13,12,11,10,9,8,7,7,8,9,10,11,12,13,14},  
 {13,12,11,10,9,8,7,6,6,7,8,9,10,11,12,13},
@@ -57,7 +57,7 @@ unsigned char shiftClockwise(unsigned char initPosition, unsigned char numOfTime
   unsigned char tmp = initPosition;
   /* unroll this loop */
   for (unsigned char i = 0; i < numOfTimes; i++){
-    if (tmp + 0x01 == 0x05){
+    if (tmp + 0x01 == 0x04){      //changed from 5 to 4
       tmp = 0x00;
     }
     else{
@@ -98,11 +98,13 @@ unsigned char getValueFrom(unsigned char facing)
 //@return - the minimum value
 unsigned char getSidesMin()
 {
-  unsigned char minimum = sides[0];                       // keeps track of the minimum value, set to the first element by default
-  if (sides[1] < minimum) minimum = sides[1];     // Checks if values at the remaining positions in the array 
-  if (sides[2] < minimum) minimum = sides[2];     // are less than the default minimum, updating the minimum accordingly
-  if (sides[3] < minimum) minimum = sides[3];     
-  return minimum;              
+  unsigned char minimum = sides[NORTH];               // keeps track of the minimum value, set to the first element by default
+  if (sides[1] < minimum) minimum = sides[EAST];      // Checks if values at the remaining positions in the array 
+  if (sides[2] < minimum) minimum = sides[SOUTH];     // are less than the default minimum, updating the minimum accordingly
+  if (sides[3] < minimum) minimum = sides[WEST];     
+  Serial.print("minimum = ");
+  Serial.println(minimum);
+  return minimum;  
 }
 
 
@@ -111,12 +113,12 @@ unsigned char getSidesMin()
 //             from has priorty
 void faceLowest(){
   unsigned char minAdj = getSidesMin();                 //sets minAdj (minimum adjacent) equal to the lowest value of the adjacent sides[] array
-  if (getValueFrom(currentFacing) == minAdj)                            //if the square in front of the robot is lower than its current square, maintain heading
-  {}   
-  else if (getValueFrom(shiftClockwise(currentFacing, 3)) == minAdj)    //if the square to the left is a minimum, turn left
+  if (getValueFrom(shiftClockwise(currentFacing, 3)) == minAdj)    //if the square to the left is a minimum, turn left
   {
     turnLeft();
   }
+  else if (getValueFrom(currentFacing) == minAdj)                            //if the square in front of the robot is lower than its current square, maintain heading
+  {}   
   else if (getValueFrom(shiftClockwise(currentFacing, 1)) == minAdj)    //if the square to the right is a minimum, turn right
   {
     turnRight();
@@ -134,7 +136,7 @@ void faceLowest(){
 //precondition - used immediately after stepping, before turning.
 void update()
 {
-  boolean frontWall = (frontSensor < NO_FRONT_WALL);                                                        //sets boolean values indicating the presence of walls
+  boolean frontWall = (frontSensor < F_SENSOR_SETPOINT);                                                        //sets boolean values indicating the presence of walls
   boolean leftWall = (leftSensor < NO_LEFT_WALL);
   boolean rightWall = (rightSensor < NO_RIGHT_WALL);
     
