@@ -9,7 +9,7 @@ unsigned char rightMotorPower = 255;                                 //PWM outpu
 
 void left_right_calibration(){                     //calibrates the left and right sensor to the robots ideal position
      int i = 0;
-     for(i; i<=20; i++)
+     for(i; i <= 20; i++)
      {
        ideal_leftsensor += analogRead(L_SENS_PIN);
        ideal_rightsensor += analogRead(R_SENS_PIN);
@@ -19,7 +19,7 @@ void left_right_calibration(){                     //calibrates the left and rig
 }
 
 void fast_stop(){
-    for(int j =0; j<1350; j++)            // for PWM left: 150 Right: 155.  1350 iterations to stop.
+    for(int j = 0; j < 1350; j++)            // for PWM left: 150 Right: 155.  1350 iterations to stop.
     {
        analogWrite(EN_LEFT, 100);
        analogWrite(EN_RIGHT, 100);
@@ -95,7 +95,7 @@ void stepForward()
   totalSteps = leftWheelSteps + rightWheelSteps;
   //the difference between the rightSetpoint and the actual right sensor reading
   //Movement
-  while(stepProgress < 250//STEP_LENGTH)
+  while(stepProgress < 250)//STEP_LENGTH)
   {
     //Serial.println(stepProgress);
     frontSensor = analogRead(F_SENS_PIN);         //updates sensor readings
