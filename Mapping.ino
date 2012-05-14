@@ -52,11 +52,11 @@ unsigned char getMinPosition()
 //           shiftClockwise(1, NORTH) == EAST, shiftClockwise(2, SOUTH) == NORTH
 //@param initPosition - the position you are looking from. usually currentFacing
 //@return - the direction numOfTimes * 90degrees clockwise of the init position
-unsigned char shiftClockwise(unsigned char initPosition, unsigned char numOfTimes)
+unsigned char shiftClockwise(unsigned char initPosition, uchar numOfTimes)
 {
   unsigned char tmp = initPosition;
   /* unroll this loop */
-  for (unsigned char i = 0; i < numOfTimes; i++){
+  for (unsigned char i = 0; i < numOfTimes){
     if (tmp + 0x01 == 0x05){
       tmp = 0x00;
     }
@@ -64,7 +64,7 @@ unsigned char shiftClockwise(unsigned char initPosition, unsigned char numOfTime
       ++tmp;
     }
   }
-  //if 
+  if 
   return tmp;
 }
 
@@ -161,7 +161,7 @@ void update()
       case WEST:                                                                                         //if the robot is currently facing west
           sides[NORTH] = (!rightWall && yPosition > 0) ? mazeMap[yPosition - 1][xPosition] : 255;        //updates sides[] with the north value
           sides[EAST] = mazeMap[yPosition][xPosition + 1];                                               //updates sides[] with value last moved from
-          sides[SOUTH] = (!leftWall && yPosition < 15) ? mazeMap[yPosition + 1][xPosition] : 255;        //updates sides[] with the south value
+          sides[SOUTH] = (!leftWall && yPosition < 15) ? mazeMap[yPosition + 1][xposition] : 255;        //updates sides[] with the south value
           sides[WEST] = (!frontWall && xPosition > 0) ? mazeMap[yPosition][xPosition - 1] : 255;         //updates sides[] with the west value
           break;
   }
