@@ -1,3 +1,4 @@
+unsigned long totalSteps = 0;
 unsigned long ideal_leftsensor = 0;                                  //calibrated ideal sensor readings.  See calibration function below
 unsigned long ideal_rightsensor = 0;
 //unsigned char leftSetpoint = 8;                                      //setpoint for left sensor during stepForward()
@@ -15,6 +16,22 @@ void left_right_calibration(){                     //calibrates the left and rig
      }
     ideal_leftsensor = ideal_leftsensor/i;
     ideal_rightsensor =  ideal_rightsensor/i;
+}
+
+void fast_stop(){
+    for(int j =0; j<1350; j++)            // for PWM left: 150 Right: 155.  1350 iterations to stop.
+    {
+       analogWrite(EN_LEFT, 100);
+       analogWrite(EN_RIGHT, 100);
+       digitalWrite(L_MINUS, HIGH);
+       digitalWrite(L_PLUS, LOW);
+       digitalWrite(R_MINUS, HIGH);
+       digitalWrite(R_PLUS, LOW); 
+    }
+    digitalWrite(L_PLUS, LOW);
+    digitalWrite(R_PLUS, LOW);
+    analogWrite(EN_LEFT, LOW);
+    analogWrite(EN_RIGHT, LOW);
 }
 
 //turnLeft() - turns the robot counterclockwise clockwise 90 degrees
@@ -78,7 +95,7 @@ void stepForward()
   totalSteps = leftWheelSteps + rightWheelSteps;
   //the difference between the rightSetpoint and the actual right sensor reading
   //Movement
-  while(stepProgress < STEP_LENGTH)
+  while(stepProgress < 250//STEP_LENGTH)
   {
     //Serial.println(stepProgress);
     frontSensor = analogRead(F_SENS_PIN);         //updates sensor readings
