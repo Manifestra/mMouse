@@ -1,8 +1,7 @@
 
 
-
-
-
+volatile unsigned long leftWheelSteps = 0;
+volatile unsigned long rightWheelSteps = 0;
 unsigned long stepProgress = 0;                        //the linear displacement since last stopped
 unsigned long leftSensor = 0;
 unsigned long rightSensor = 0;
