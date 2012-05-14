@@ -33,6 +33,7 @@ unsigned long frontSensor = 0;
 
 void setup()
 { 
+  Serial.begin(9600);
   attachInterrupt(0, incrLeftSteps, RISING);  //increments leftSteps whenever a rising edge is detected from the left motor
   attachInterrupt(1, incrRightSteps, RISING); //increments rightSteps whenever a rising edge is detected from the right motor
   pinMode(EN_LEFT, OUTPUT);
@@ -56,6 +57,10 @@ void loop()
   
   stepForward();     //move the mouse forward one cell
   update();          //redraws the map according to its surroundings
-  faceLowest();      //faces the cell most likely to lead to the center
+  faceLowest(); //faces the cell most likely to lead to the center
+  
+  //if mazeMap([yPosition][xPosition] == 0){
+    //xPosition = 0; yPosition = 0;
+    //delay(10000);
+  //}
 }
-
