@@ -9,7 +9,7 @@ unsigned char rightMotorPower = 255;                                 //PWM outpu
 
 void left_right_calibration(){                     //calibrates the left and right sensor to the robots ideal position
      int i = 0;
-     for(i; i <= 20; i++)
+     for(i; i<=20; i++)
      {
        ideal_leftsensor += analogRead(L_SENS_PIN);
        ideal_rightsensor += analogRead(R_SENS_PIN);
@@ -19,7 +19,7 @@ void left_right_calibration(){                     //calibrates the left and rig
 }
 
 void fast_stop(){
-    for(int j = 0; j < 1350; j++)            // for PWM left: 150 Right: 155.  1350 iterations to stop.
+    for(int j =0; j<1350; j++)            // for PWM left: 150 Right: 155.  1350 iterations to stop.
     {
        analogWrite(EN_LEFT, 100);
        analogWrite(EN_RIGHT, 100);
@@ -40,7 +40,7 @@ void turnLeft()                                                 //Turns left unt
   totalSteps = leftWheelSteps + rightWheelSteps;
   unsigned long initSteps = leftWheelSteps + rightWheelSteps;
   unsigned long L_turnProgress = totalSteps - initSteps;
-  unsigned long L_turnSteps = 88; 
+  unsigned long L_turnSteps = 80; 
   while(L_turnProgress < L_turnSteps)
   {
     digitalWrite(R_PLUS, HIGH); 
@@ -54,6 +54,7 @@ void turnLeft()                                                 //Turns left unt
   }
     analogWrite(EN_LEFT, LOW);
     analogWrite(EN_RIGHT, LOW);
+    delay(500);
   /* Mapping */
   currentFacing = currentFacing > 0 ? --currentFacing : 3;      //updates the current facing.
 }
@@ -76,6 +77,7 @@ void turnRight()                                                                
     totalSteps = leftWheelSteps + rightWheelSteps;
     R_turnProgress = totalSteps - initSteps;
   }
+  delay(500);
     analogWrite(EN_LEFT, LOW);
     analogWrite(EN_RIGHT, LOW);
 
@@ -95,7 +97,7 @@ void stepForward()
   totalSteps = leftWheelSteps + rightWheelSteps;
   //the difference between the rightSetpoint and the actual right sensor reading
   //Movement
-  while(stepProgress < 250)//STEP_LENGTH)
+  while(stepProgress < 250)
   {
     //Serial.println(stepProgress);
     frontSensor = analogRead(F_SENS_PIN);         //updates sensor readings
@@ -105,7 +107,7 @@ void stepForward()
     rightError = ideal_rightsensor - analogRead(R_SENS_PIN); 
     totalSteps = leftWheelSteps + rightWheelSteps;
     stepProgress = totalSteps - initSteps;
-    Serial.println(leftError);
+   // Serial.println(stepProgress);
     //finds how far the right sensor is from the desired state
     /* apply voltage to both motors, complete with proportional control c = Error * Kp, where c is an offset to the motor's PWM voltage*/
     //set forward direction
@@ -116,28 +118,32 @@ void stepForward()
     //set speed
     if(leftError > 0 )
     { 
-      unsigned long L_adjust = 90 + (leftError*LKP);
-      if(L_adjust > 255)
-      L_adjust = 255;
+      unsigned long L_adjust = 90 + (leftError * LKP);
+      if(L_adjust > 255) 
+      {
+        L_adjust = 255;
+      }
       analogWrite(EN_LEFT, L_adjust);
       analogWrite(EN_RIGHT, 95);
     }
     else
     {
-      unsigned long R_adjust = 95 + (rightError*RKP );
+      unsigned long R_adjust = 95 + (rightError * RKP );
       if(R_adjust > 255)
-      R_adjust = 255;
+      {
+        R_adjust = 255;
+      }
       analogWrite(EN_RIGHT, R_adjust );
       analogWrite(EN_LEFT, 90);
     }
     
-    if (frontSensor <= F_SENSOR_SETPOINT)                          //if ideal distance from front wall, stop immediately.
+    if (frontSensor <= F_SENSOR_SETPOINT && digitalRead(L_PLUS) == HIGH && digitalRead(L_MINUS) == LOW)                          //if ideal distance from front wall, stop immediately.
       {
         /* turn off both motors */
         fast_stop();
         break;
       } 
-      //fast_stop();
+      
   }
     
   /* Mapping */
@@ -156,5 +162,6 @@ void stepForward()
       --xPosition;
       break;
     }
-  
+  fast_stop();
+  delay(2000);
 }
