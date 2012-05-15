@@ -44,6 +44,7 @@ unsigned char getMinPosition()
   if (sides[1] == minValue) return 1;
   if (sides[2] == minValue) return 2;
   if (sides[3] == minValue) return 3;
+  
 }
     
 //shiftClockwise - returns the direction (numOfTimes * 90degrees) clockwise of the init position
@@ -190,3 +191,21 @@ boolean wallToRight(){
   if(frontSensor < NO_RIGHT_WALL) return true;
   else return false;
 }
+
+void printDirection(unsigned char dir){
+  if (dir == 0){
+    Serial.println("North");
+  }
+  else if (dir == 1){
+    Serial.println("East");
+  }
+  else if (dir == 2){
+    Serial.println("South");
+  }
+  else if (dir == 1){
+    Serial.println("West");
+  }
+}
+
+
+
