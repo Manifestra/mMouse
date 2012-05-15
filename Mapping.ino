@@ -40,11 +40,14 @@ static unsigned char mazeMap[16][16] =                               //the map o
 unsigned char getMinPosition()
 {
   unsigned char minValue = getSidesMin();
-  if (sides[0] == minValue) return 0;
-  if (sides[1] == minValue) return 1;
-  if (sides[2] == minValue) return 2;
-  if (sides[3] == minValue) return 3;
-  
+  unsigned char minAt = 0;
+  if (sides[0] == minValue) minAt = 0;
+  if (sides[1] == minValue) minAt = 1;
+  if (sides[2] == minValue) minAt = 2;
+  if (sides[3] == minValue) minAt = 3;
+  Serial.print("Min at ");
+  printDirection(minAt);
+  return minAt;
 }
     
 //shiftClockwise - returns the direction (numOfTimes * 90degrees) clockwise of the init position
