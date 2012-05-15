@@ -202,7 +202,7 @@ void printDirection(unsigned char dir){
   else if (dir == 2){
     Serial.println("South");
   }
-  else if (dir == 1){
+  else if (dir == 3){
     Serial.println("West");
   }
 }
