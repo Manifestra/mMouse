@@ -11,10 +11,10 @@ unsigned char mouseX = 0;                                 //a value representing
 unsigned char mouseY = 0;                                 //a value representing the robot's current y position
 
 unsigned char currentFacing = 1;                          //the direction, N,S,E,W which the robot is facing.
-                                                                 // 0 for North, 1 for East, 2 for South, 3 for West.
-unsigned char sides[4] = {255, 255, 255, 255};                   //the number of the open sides i.e. adjacent cells with no walls
-                                                                 //in the way. The array is indexed based on direction. i.e. sides[0]
-                                                                 //holds the value of the cell to the north, or 255 if it is a wall.
+                                                          // 0 for North, 1 for East, 2 for South, 3 for West.
+unsigned char sides[4] = {255, 255, 255, 255};            //the number of the open sides i.e. adjacent cells with no walls
+                                                       //in the way. The array is indexed based on direction. i.e. sides[0]
+                                                       //holds the value of the cell to the north, or 255 if it is a wall.
                    
 unsigned char mazeMap[16][16] =                               //the map of the maze, can keep static if merge movement with mapping
 {
@@ -35,7 +35,26 @@ unsigned char mazeMap[16][16] =                               //the map of the m
 {13,12,11,10,9,8,7,6,6,7,8,9,10,11,12,13},
 {14,13,12,11,10,9,8,7,7,8,9,10,11,12,13,14}
 };
-    
+
+unsigned char walls[16][16] = {
+{0x02,0x0E,0x0E,0x0E,0x0E,0x0E,0x0E,0x0E,0x0E,0x0E,0x0E,0x0E,0x0E,0x0E,0x0E,0x0C},  
+{0x07,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0D},
+{0x07,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0D},
+{0x07,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0D},
+{0x07,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0D},
+{0x07,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0D},
+{0x07,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0D},
+{0x07,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0D},
+{0x07,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0D},
+{0x07,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0D},
+{0x07,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0D},
+{0x07,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0D},
+{0x07,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0D},
+{0x07,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0D},
+{0x07,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0D},
+{0x03,0x0B,0x0B,0x0B,0x0B,0x0B,0x0B,0x0B,0x0B,0x0B,0x0B,0x0B,0x0B,0x0B,0x0B,0x09}};
+
+
 //shiftClockwise - returns the direction (numOfTimes * 90degrees) clockwise of the init position
 //@param numOfTimes - the amount of times you wish to look in terms of 90 degree clockwise increments on the compass
 //      example
@@ -58,7 +77,7 @@ unsigned char shiftClockwise(unsigned char initPosition, unsigned char numOfTime
   return tmp;
 }
 
-//getValueFrom - gets the value of the cell to the north, east, south, or west of the robot
+//getValueFrom - gets the value of the cell to the north, east, south, or west of the cell of interest
 //@param facing - the direction to look for the value, north, east, south, or west
 //@return - the floodfill value of the referenced cell
 unsigned char getValueFrom(unsigned char facing)
@@ -110,48 +129,6 @@ void faceLowest(){
   
 }
 
-//update() - rewrites the map if necessary. If the number of the current square is rewritten to be 1 + the minimum number of
-//  the available adjacent squares. A square is available if there is no wall between the robot and it.
-//precondition - used immediately after stepping, before turning.
-void update()
-{
-  boolean frontWall = (frontSensor < F_SENSOR_SETPOINT);                                                        //sets boolean values indicating the presence of walls
-  boolean leftWall = (leftSensor < NO_LEFT_WALL);
-  boolean rightWall = (rightSensor < NO_RIGHT_WALL);
-    
-  switch (currentFacing)                                                                                 //updates the sides[] array
-  {
-    case NORTH:                                                                                          //if the robot is currently facing north                                                     
-          sides[NORTH] = (!frontWall && yPosition > 0) ? mazeMap[yPosition - 1][xPosition] : 255;        //updates sides[] with the north value
-          sides[EAST] = (!rightWall && xPosition < 15) ? mazeMap[yPosition][xPosition + 1] : 255;        //updates sides[] with the east value
-          sides[SOUTH] = mazeMap[yPosition + 1][xPosition];                                              //updates sides[] with value last moved from
-          sides[WEST] = (!leftWall && xPosition > 0) ? mazeMap[yPosition][xPosition - 1] : 255;          //updates sides[] with the west value
-          break;
-     case EAST:                                                                                          //if the robot is currently facing east
-          sides[NORTH] = (!leftWall && yPosition > 0) ? mazeMap[yPosition - 1][xPosition] : 255;         //updates sides[] with the north value
-          sides[EAST] = (!frontWall && xPosition < 15) ? mazeMap[yPosition][xPosition + 1] : 255;        //updates sides[] with the east value
-          sides[SOUTH] = (!rightWall && yPosition < 15) ? mazeMap[yPosition + 1][xPosition] : 255;       //updates sides[] with the south value
-          sides[WEST] = (xPosition > 0) ? mazeMap[yPosition][xPosition - 1] : 255;                       //updates sides[] with west value (checks if initial conditions)
-          break;
-     case SOUTH:                                                                                         //if the robot is currently facing south
-          sides[NORTH] = mazeMap[yPosition - 1][xPosition];                                              //updates sides[] with value last moved from
-          sides[EAST] = (!leftWall && xPosition < 15) ? mazeMap[yPosition][xPosition + 1] : 255;         //updates sides[] with the east value
-          sides[SOUTH] = (!frontWall && yPosition < 15) ? mazeMap[yPosition + 1][xPosition] : 255;       //updates sides[] with the south value
-          sides[WEST] = (!rightWall && xPosition > 0) ? mazeMap[yPosition][xPosition - 1] : 255;         //updates sides[] with the west value
-          break;
-      case WEST:                                                                                         //if the robot is currently facing west
-          sides[NORTH] = (!rightWall && yPosition > 0) ? mazeMap[yPosition - 1][xPosition] : 255;        //updates sides[] with the north value
-          sides[EAST] = mazeMap[yPosition][xPosition + 1];                                               //updates sides[] with value last moved from
-          sides[SOUTH] = (!leftWall && yPosition < 15) ? mazeMap[yPosition + 1][xPosition] : 255;        //updates sides[] with the south value
-          sides[WEST] = (!frontWall && xPosition > 0) ? mazeMap[yPosition][xPosition - 1] : 255;         //updates sides[] with the west value
-          break;
-  }
-  
-  if (getSidesMin(sides) > mazeMap[yPosition][xPosition]){                 //if the current cell is the lowest valued cell, update its value to
-    mazeMap[yPosition][xPosition] = getSidesMin(sides) + 1;                //1 + the value of the nearest open cell
-  }
-}
-
 void printDirection(unsigned char dir){
   if (dir == 0){
     Serial.println("North");
@@ -166,6 +143,7 @@ void printDirection(unsigned char dir){
     Serial.println("West");
   }
 }
+
 
 
 
