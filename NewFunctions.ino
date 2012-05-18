@@ -156,4 +156,18 @@ boolean isWestWall(unsigned char wallConfig){
   return getBit(~wallConfig, WEST);
 }
 
-
+//faces the mouse in the ideal position
+unsigned char faceIdeal(){
+  fillSides(sides, mouseX, mouseY);
+  unsigned char ideal = getSidesMin(sides);
+  if (sides[currentFacing] == ideal) return;
+  else if (sides[shiftClockwise(currentFacing, 1)] == ideal){
+    turnRight();
+  else if (sides[shiftClockwise(currentFacing, 2)] == ideal){
+    turnLeft();
+    turnLeft();
+  }
+  else if (sides[shiftClockwise(currentFacing, 3)] == ideal){
+    turnLeft();
+  }
+}
