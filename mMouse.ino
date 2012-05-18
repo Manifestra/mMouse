@@ -1,5 +1,4 @@
 
-
 volatile unsigned long leftWheelSteps = 0;
 volatile unsigned long rightWheelSteps = 0;
 unsigned long stepProgress = 0;                        //the linear displacement since last stopped
@@ -55,9 +54,9 @@ void loop()
   leftSensor = analogRead(L_SENS_PIN);
   rightSensor = analogRead(R_SENS_PIN);
   
-  stepForward();     //move the mouse forward one cell
-  update();          //redraws the map according to its surroundings
-  faceLowest(); //faces the cell most likely to lead to the center
+  TheFlood();     
+  faceIdeal();          
+  StepForward(); 
   
   //if mazeMap([yPosition][xPosition] == 0){
     //xPosition = 0; yPosition = 0;
