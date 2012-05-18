@@ -3,8 +3,6 @@
 #define SOUTH 2
 #define WEST 3
 
-
-
 unsigned char xPosition = 0;                              //a value between 0 and 15 representing an x coordinate
 unsigned char yPosition = 0;                              //a value between 0 and 15 representing a y coordinate
 unsigned char mouseX = 0;                                 //a value representing the robot's current x position
@@ -75,58 +73,6 @@ unsigned char shiftClockwise(unsigned char initPosition, unsigned char numOfTime
   }
   //if 
   return tmp;
-}
-
-//getValueFrom - gets the value of the cell to the north, east, south, or west of the cell of interest
-//@param facing - the direction to look for the value, north, east, south, or west
-//@return - the floodfill value of the referenced cell
-unsigned char getValueFrom(unsigned char facing)
-{
-  switch (facing)
-  {
-    case NORTH:
-      if(yPosition > 0) return mazeMap[yPosition - 1][xPosition];
-      else return 255;
-      break;
-    case EAST:
-      if(xPosition < 15) return mazeMap[yPosition][xPosition + 1];
-      else return 255;
-      break;
-    case SOUTH:
-      if(yPosition < 15) return mazeMap[yPosition + 1][xPosition];
-      else return 255;
-      break;
-    case WEST:
-      if(xPosition > 0) return mazeMap[yPosition][xPosition - 1];
-      else return 255;
-      break;
-  }
-}
-  
-
-
-
-//faceLowest - turns towards the lowest number square. The square which the robot currently came from has lower priority
-//             in a tie. If three cells all have the same number, the leftmost cell that is not the one the robot came
-//             from has priorty
-void faceLowest(){
-    unsigned char minAdj = getSidesMin(sides);                          //sets minAdj (minimum adjacent) equal to the lowest value of the adjacent sides[] array
-  if (getValueFrom(shiftClockwise(currentFacing, 3)) == minAdj)    //if the square to the left is a minimum, turn left
-  {
-    turnLeft();
-  }
-  else if (getValueFrom(currentFacing) == minAdj)                            //if the square in front of the robot is lower than its current square, maintain heading
-  {}   
-  else if (getValueFrom(shiftClockwise(currentFacing, 1)) == minAdj)    //if the square to the right is a minimum, turn right
-  {
-    turnRight();
-  }
-  else                                                                  //else make a u-turn
-  {
-    turnLeft();
-    turnLeft(); 
-  }
-  
 }
 
 void printDirection(unsigned char dir){
